@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Üstün Language Dictionary Ver 0.1.1</title>
+    <title>Üstün Language Dictionary</title>
     <style>
         body {
             background-color: #000;
@@ -57,7 +57,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Üstün Language Dictionary Ver 0.1.1</h1>
+        <h1>Üstün Language Dictionary Ver 0.1.2</h1>
         <div class="input-container">
             <input type="text" id="inputSentence" placeholder="Enter a sentence in English..." />
             <button onclick="translateSentence()">Translate</button>
@@ -66,22 +66,16 @@
     </div>
 
     <script>
-        // Initialize an empty dictionary object
-        let dictionary = {};
+        let dictionary = {}; // Initialize an empty dictionary
 
-        // Fetch dictionary from the external JSON file
+        // Load the dictionary from the external JSON file
         fetch('dictionary.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load dictionary');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                dictionary = data;
+                dictionary = data; // Assign the loaded dictionary
             })
             .catch(error => {
-                console.error("Error loading dictionary:", error);
+                console.error('Error loading dictionary:', error);
             });
 
         // Function to handle sentence translation
@@ -101,10 +95,11 @@
                 // Convert the word to lowercase for case-insensitive matching
                 const lowerCaseWord = word.toLowerCase();
                 
+                // Check if word exists in dictionary
                 if (dictionary[lowerCaseWord]) {
                     return dictionary[lowerCaseWord]; // If word exists in dictionary
                 } else {
-                    return `<span style="color: red;">${word}</span>`; // Word not found in dictionary, highlight it
+                    return `<span style="color: red;">${word}</span>`; // Word not found, highlight it
                 }
             });
 

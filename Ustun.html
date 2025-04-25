@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-color: #000000;
+            color: #ffffff;
             margin: 0;
             padding: 0;
         }
@@ -28,7 +29,7 @@
         .output-container {
             margin-top: 20px;
             padding: 10px;
-            background-color: #ecf0f1;
+            background-color: #34495e;
             border-radius: 5px;
             text-align: center;
         }
@@ -39,6 +40,8 @@
             max-width: 500px;
             border-radius: 5px;
             border: 1px solid #bdc3c7;
+            background-color: #2c3e50;
+            color: white;
         }
         button {
             padding: 10px 20px;
@@ -249,7 +252,6 @@
             "lafir": "yes",
             "hazir": "no",
             "iyi": "okay"
-            // Add more translations here
         };
 
         function translateText() {
@@ -265,8 +267,7 @@
                 }
             });
 
-            document.getElementById('translationOutput').textContent = translation.join(' ');
+            document.getElementById('translationOutput').textContent = translation
+
         }
-    </script>
-</body>
-</html>
+ 

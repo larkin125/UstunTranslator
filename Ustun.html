@@ -59,8 +59,9 @@
     <div class="container">
         <h1>Üstün Language Dictionary Ver 0.1.2</h1>
         <div class="input-container">
-            <input type="text" id="inputSentence" placeholder="Enter a sentence in English..." />
-            <button onclick="translateSentence()">Translate</button>
+            <input type="text" id="inputSentence" placeholder="Enter a sentence..." />
+            <button onclick="translateSentence('en-to-ustun')">English to Üstün</button>
+            <button onclick="translateSentence('ustun-to-en')">Üstün to English</button>
         </div>
         <div class="output-container" id="outputContainer"></div>
     </div>
@@ -79,7 +80,7 @@
             });
 
         // Function to handle sentence translation
-        function translateSentence() {
+        function translateSentence(direction) {
             const inputSentence = document.getElementById("inputSentence").value.trim();
             const outputContainer = document.getElementById("outputContainer");
 
@@ -88,24 +89,43 @@
                 return;
             }
 
-            // Split the sentence into words
             const words = inputSentence.split(/\s+/); // Split by any whitespace
 
-            const translatedWords = words.map(word => {
-                // Convert the word to lowercase for case-insensitive matching
-                const lowerCaseWord = word.toLowerCase();
-                
-                // Check if word exists in dictionary
-                if (dictionary[lowerCaseWord]) {
-                    return dictionary[lowerCaseWord]; // If word exists in dictionary
-                } else {
-                    return `<span style="color: red;">${word}</span>`; // Word not found, highlight it
-                }
-            });
+            if (direction === 'en-to-ustun') {
+                const translatedWords = words.map(word => {
+                    // Convert the word to lowercase for case-insensitive matching
+                    const lowerCaseWord = word.toLowerCase();
+                    
+                    // Check if word exists in dictionary
+                    if (dictionary[lowerCaseWord]) {
+                        return dictionary[lowerCaseWord]; // If word exists in dictionary
+                    } else {
+                        return `<span style="color: red;">${word}</span>`; // Word not found, highlight it
+                    }
+                });
 
-            // Join the translated words back into a sentence
-            const translatedSentence = translatedWords.join(" ");
-            outputContainer.innerHTML = `<p><strong>Translation:</strong> ${translatedSentence}</p>`;
+                const translatedSentence = translatedWords.join(" ");
+                outputContainer.innerHTML = `<p><strong>English to Üstün Translation:</strong> ${translatedSentence}</p>`;
+            } else if (direction === 'ustun-to-en') {
+                const reversedDictionary = Object.fromEntries(
+                    Object.entries(dictionary).map(([key, value]) => [value, key])
+                ); // Create a reversed dictionary for Üstün to English translation
+
+                const translatedWords = words.map(word => {
+                    // Convert the word to lowercase for case-insensitive matching
+                    const lowerCaseWord = word.toLowerCase();
+                    
+                    // Check if word exists in reversed dictionary
+                    if (reversedDictionary[lowerCaseWord]) {
+                        return reversedDictionary[lowerCaseWord]; // If word exists in reversed dictionary
+                    } else {
+                        return `<span style="color: red;">${word}</span>`; // Word not found, highlight it
+                    }
+                });
+
+                const translatedSentence = translatedWords.join(" ");
+                outputContainer.innerHTML = `<p><strong>Üstün to English Translation:</strong> ${translatedSentence}</p>`;
+            }
         }
     </script>
 </body>

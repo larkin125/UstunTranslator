@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Üstün Language Dictionary</title>
+    <title>Üstün Language Dictionary Version 0.1.0</title>
     <style>
         body {
             background-color: #000;
@@ -59,8 +59,8 @@
     <div class="container">
         <h1>Üstün Language Dictionary</h1>
         <div class="input-container">
-            <input type="text" id="inputWord" placeholder="Enter a word in English..." />
-            <button onclick="translateWord()">Translate</button>
+            <input type="text" id="inputSentence" placeholder="Enter a sentence in English..." />
+            <button onclick="translateSentence()">Translate</button>
         </div>
         <div class="output-container" id="outputContainer"></div>
     </div>
@@ -77,21 +77,30 @@
             })
             .catch(error => console.error("Error loading dictionary:", error));
 
-        // Function to handle translation
-        function translateWord() {
-            const inputWord = document.getElementById("inputWord").value.trim().toLowerCase();
+        // Function to handle sentence translation
+        function translateSentence() {
+            const inputSentence = document.getElementById("inputSentence").value.trim();
             const outputContainer = document.getElementById("outputContainer");
 
-            if (inputWord === "") {
-                outputContainer.innerHTML = "<p>Please enter a word to translate.</p>";
+            if (inputSentence === "") {
+                outputContainer.innerHTML = "<p>Please enter a sentence to translate.</p>";
                 return;
             }
 
-            if (dictionary[inputWord]) {
-                outputContainer.innerHTML = `<p><strong>Translation:</strong> ${dictionary[inputWord]}</p>`;
-            } else {
-                outputContainer.innerHTML = `<p><strong>Sorry:</strong> The word "${inputWord}" is not in the Üstün language dictionary.</p>`;
-            }
+            // Split the sentence into words
+            const words = inputSentence.split(" ");
+            const translatedWords = words.map(word => {
+                const lowerCaseWord = word.toLowerCase();
+                if (dictionary[lowerCaseWord]) {
+                    return dictionary[lowerCaseWord]; // If word exists in dictionary
+                } else {
+                    return word; // If word doesn't exist, keep the original word
+                }
+            });
+
+            // Join the translated words back into a sentence
+            const translatedSentence = translatedWords.join(" ");
+            outputContainer.innerHTML = `<p><strong>Translation:</strong> ${translatedSentence}</p>`;
         }
     </script>
 </body>

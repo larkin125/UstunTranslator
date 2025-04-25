@@ -93,10 +93,9 @@
 
             if (direction === 'en-to-ustun') {
                 const translatedWords = words.map(word => {
-                    // Convert the word to lowercase for case-insensitive matching
                     const lowerCaseWord = word.toLowerCase();
                     
-                    // Check if word exists in dictionary
+                    // Check if word exists in dictionary (English to Üstün)
                     if (dictionary[lowerCaseWord]) {
                         return dictionary[lowerCaseWord]; // If word exists in dictionary
                     } else {
@@ -107,15 +106,15 @@
                 const translatedSentence = translatedWords.join(" ");
                 outputContainer.innerHTML = `<p><strong>English to Üstün Translation:</strong> ${translatedSentence}</p>`;
             } else if (direction === 'ustun-to-en') {
+                // Create a reversed dictionary for Üstün to English translation
                 const reversedDictionary = Object.fromEntries(
                     Object.entries(dictionary).map(([key, value]) => [value, key])
-                ); // Create a reversed dictionary for Üstün to English translation
+                );
 
                 const translatedWords = words.map(word => {
-                    // Convert the word to lowercase for case-insensitive matching
                     const lowerCaseWord = word.toLowerCase();
                     
-                    // Check if word exists in reversed dictionary
+                    // Check if word exists in reversed dictionary (Üstün to English)
                     if (reversedDictionary[lowerCaseWord]) {
                         return reversedDictionary[lowerCaseWord]; // If word exists in reversed dictionary
                     } else {

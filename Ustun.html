@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Üstün Language Dictionary Version 0.1.0</title>
+    <title>Üstün Language Dictionary Version 0.1.1</title>
     <style>
         body {
             background-color: #000;
@@ -66,16 +66,23 @@
     </div>
 
     <script>
-        // Initialize dictionary as empty
+        // Initialize an empty dictionary object
         let dictionary = {};
 
         // Fetch dictionary from the external JSON file
         fetch('dictionary.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load dictionary');
+                }
+                return response.json();
+            })
             .then(data => {
                 dictionary = data;
             })
-            .catch(error => console.error("Error loading dictionary:", error));
+            .catch(error => {
+                console.error("Error loading dictionary:", error);
+            });
 
         // Function to handle sentence translation
         function translateSentence() {
@@ -88,13 +95,16 @@
             }
 
             // Split the sentence into words
-            const words = inputSentence.split(" ");
+            const words = inputSentence.split(/\s+/); // Split by any whitespace
+
             const translatedWords = words.map(word => {
+                // Convert the word to lowercase for case-insensitive matching
                 const lowerCaseWord = word.toLowerCase();
+                
                 if (dictionary[lowerCaseWord]) {
                     return dictionary[lowerCaseWord]; // If word exists in dictionary
                 } else {
-                    return word; // If word doesn't exist, keep the original word
+                    return `<span style="color: red;">${word}</span>`; // Word not found in dictionary, highlight it
                 }
             });
 

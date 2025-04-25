@@ -3,271 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Üstün Language Translator</title>
+    <title>Üstün Language Dictionary</title>
     <style>
         body {
+            background-color: #000;
+            color: #fff;
             font-family: Arial, sans-serif;
-            background-color: #000000;
-            color: #ffffff;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
+        h1 {
             text-align: center;
+            font-size: 2.5em;
         }
         .container {
-            margin: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
         .input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 80%;
+            max-width: 400px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #555;
         }
         .output-container {
             margin-top: 20px;
             padding: 10px;
-            background-color: #34495e;
-            border-radius: 5px;
-            text-align: center;
-        }
-        select, textarea {
-            padding: 10px;
-            margin: 5px;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 5px;
-            border: 1px solid #bdc3c7;
-            background-color: #2c3e50;
-            color: white;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2980b9;
+            border: 1px solid #444;
+            background-color: #222;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Üstün Language Translator</h1>
-        <p>Translate English to Üstün (Elvish)</p>
-    </header>
-
     <div class="container">
+        <h1>Üstün Language Dictionary</h1>
         <div class="input-container">
-            <textarea id="englishText" placeholder="Enter English text here..." rows="6"></textarea>
-            <button onclick="translateText()">Translate to Üstün</button>
+            <input type="text" id="inputWord" placeholder="Enter a word in English..." />
+            <button onclick="translateWord()">Translate</button>
         </div>
-
-        <div class="output-container">
-            <h2>Üstün Translation:</h2>
-            <p id="translationOutput"></p>
-        </div>
+        <div class="output-container" id="outputContainer"></div>
     </div>
 
     <script>
-        const dictionary = {
-            "the": "s'o",
-            "is": "uw'e",
-            "this": "zä",
-            "that": "zan",
-            "these": "zäse",
-            "those": "zanse",
-            "a": "s'a",
-            "was": "uw'ek",
-            "will be": "uw'eth",
-            "who": "kimar",
-            "what": "nema",
-            "when": "zeman",
-            "where": "nere",
-            "why": "niçin",
-            "how": "nashil",
-            "no": "hazir",
-            "don't": "hazuw",
-            "and": "ve",
-            "or": "ya",
-            "but": "ama",
-            "if": "eger",
-            "because": "çunku",
-            "in": "idar",
-            "on": "üstin",
-            "with": "ile",
-            "to": "ekre",
-            "from": "dena",
-            "of": "nin",
-            "good": "kal",
-            "bad": "zäl",
-            "many": "se",
-            "here": "zal",
-            "use": "zul",
-            "wield": "zul",
-            "so": "he/she/it",  // "So" in Üstün translates to "He/She/It"
-            "su": "I",
-            "suaü": "me",
-            "susen": "our",
-            "sensu": "us",
-            "susun": "we",
-            "sen": "you",
-            "kätü": "bad",  // Adjective: Bad
-            "den": "big, large",
-            "tem": "clean",
-            "guk": "cold",
-            "gu": "cool",
-            "denrin": "deep",
-            "farksen": "different",
-            "kirk": "dirty",
-            "kuru": "dry",
-            "kir": "dull",
-            "kurin": "empty",
-            "hizli": "fast",
-            "kirt": "flat",
-            "denzu'a": "full",
-            "ku": "little, small",
-            "jo'": "black",
-            "yes": "green",
-            "ja'": "white",
-            "jo'u": "dark",
-            "ja'u": "light",
-            "doruk": "to finish, to complete / to stop, to end",
-            "zeua": "to cost / coin",
-            "zülasht": "to hate",
-            "ashtä": "to like",
-            "ashti": "to love (agape)",
-            "ashta": "to love (romantic, eros)",
-            "ashto": "to love (something, philia)",
-            "asht'sul": "to miss",
-            "asht'eol": "to want, would like",
-            "forshuun": "to argue",
-            "shun'ata": "to call (refer to by a certain name)",
-            "shuan": "to reply, to answer",
-            "shuansho": "to request, to ask for/that",
-            "shun": "to say",
-            "shushun": "to teach",
-            "shuan'shu": "to thank",
-            "sho'shuan": "to borrow",
-            "shu'shuan": "to bring",
-            "ze'ua": "to buy",
-            "shu": "to feed",
-            "shi'": "to find",
-            "sho'": "to get, to come to have, to obtain",
-            "sha'": "to give",
-            "sho'e": "to have (something inalienable)",
-            "sho'a": "to have, to possess, to own",
-            "sho'i": "to need",
-            "ze'sha": "to sell",
-            "shosho'e": "to take",
-            "agzehsha'": "to kiss",
-            "ich": "to drink",
-            "ach": "to eat",
-            "drüss": "to have sex, to sleep with, to make love",
-            "ee'a": "to feel",
-            "ee'e": "to hear",
-            "ee'u": "to see",
-            "ee'i": "to smell",
-            "ee'o": "to taste",
-            "kra": "to go",
-            "kra'sul": "to go down, to descend",
-            "kra'val": "to go up, to ascend",
-            "kata": "to kill",
-            "uw'a": "to be (location)",
-            "uw'e": "to be (existence)",
-            "uw'la": "to do, to perform",
-            "zuhau": "to greet",
-            "o": "to be like (alike), similar",
-            "forr": "war",
-            "zeua": "coin, cost",
-            "zeua'ku": "cheap",
-            "zeua'den": "expensive",
-            "nekit": "money",
-            "nekitku": "poor",
-            "nekitden": "rich",
-            "akikir": "to know (information) / knowledge",
-            "shol": "desert",
-            "deniz": "ocean, sea",
-            "tosh": "rock, stone",
-            "iz": "water",
-            "ket": "day (planet rotation)",
-            "sehir": "city, town",
-            "hir": "home, house",
-            "ustir": "tower",
-            "alanlar": "field",
-            "menzar": "grave",
-            "patik": "book",
-            "bahar": "flower",
-            "aga": "tree",
-            "ud": "body",
-            "parmak": "finger",
-            "agzeh": "mouth",
-            "shianyu": "person, people",
-            "ialashu": "friend",
-            "forhal": "warrior",
-            "fahise": "whore",
-            "asagi": "lower elf",
-            "üstün": "high elf",
-            "yaralti": "under elf",
-            "bastkardin": "temptress",
-            "kräl sah": "domain lord",
-            "örtüer": "black knight",
-            "zümrät": "emerald",
-            "aki": "mind",
-            "fikir": "idea",
-            "cima": "grass",
-            "ve": "and",
-            "tan": "dawn",
-            "kimb": "protect, care",
-            "refakâtçi": "consort",
-            "hozah": "up",
-            "lazah": "down",
-            "lazir": "left",
-            "hazir": "right",
-            "uh'el": "beautiful, pretty",
-            "lu": "brother",
-            "og": "child (reciprocal of parent)",
-            "ogla": "daughter",
-            "uglu": "father",
-            "luiz": "husband",
-            "ugla": "mother",
-            "ug": "parents",
-            "la": "sister",
-            "oglu": "son",
-            "laiz": "wife",
-            "yaninda": "pair, couple",
-            "yetki": "power",
-            "kal": "good",
-            "zäl": "bad",
-            "se": "many",
-            "zal": "here",
-            "zul": "use, wield",
-            "tashima": "transport",
-            "katyushu": "mysterious",
-            "lafir": "yes",
-            "hazir": "no",
-            "iyi": "okay"
-        };
+        // Initialize dictionary as empty
+        let dictionary = {};
 
-        function translateText() {
-            const englishText = document.getElementById('englishText').value.toLowerCase();
-            const words = englishText.split(/\s+/);
-            let translation = [];
+        // Fetch dictionary from the external JSON file
+        fetch('dictionary.json')
+            .then(response => response.json())
+            .then(data => {
+                dictionary = data;
+            })
+            .catch(error => console.error("Error loading dictionary:", error));
 
-            words.forEach(word => {
-                if (dictionary[word]) {
-                    translation.push(dictionary[word]);
-                } else {
-                    translation.push(word); // If no translation, keep the word as is
-                }
-            });
+        // Function to handle translation
+        function translateWord() {
+            const inputWord = document.getElementById("inputWord").value.trim().toLowerCase();
+            const outputContainer = document.getElementById("outputContainer");
 
-            document.getElementById('translationOutput').textContent = translation
+            if (inputWord === "") {
+                outputContainer.innerHTML = "<p>Please enter a word to translate.</p>";
+                return;
+            }
 
+            if (dictionary[inputWord]) {
+                outputContainer.innerHTML = `<p><strong>Translation:</strong> ${dictionary[inputWord]}</p>`;
+            } else {
+                outputContainer.innerHTML = `<p><strong>Sorry:</strong> The word "${inputWord}" is not in the Üstün language dictionary.</p>`;
+            }
         }
- 
+    </script>
+</body>
+</html>
